@@ -26,16 +26,16 @@ def preprocess_screen(screen, width=320, height=240, canny=False):
     if not isinstance(screen, np.ndarray):
         raise TypeError("Error converting screen to NumPy array.")
 
-    print(f"Original screen dimensions: {screen.shape}")
+    # print(f"Original screen dimensions: {screen.shape}")
 
     if screen.ndim != 3 or screen.shape[2] != 3:
         raise ValueError(f"Error: Invalid screen shape. Expected (height, width, 3), got {screen.shape}")
 
     resized_screen = resize_image(screen, width, height)
-    print(f"Resized screen dimensions: {resized_screen.shape}")
+    # print(f"Resized screen dimensions: {resized_screen.shape}")
 
     grayscale_screen = convert_to_grayscale(resized_screen)
-    print(f"Grayscale screen dimensions: {grayscale_screen.shape}")
+    # print(f"Grayscale screen dimensions: {grayscale_screen.shape}")
 
     if canny:
         edge_screen = apply_canny_edge_detection(grayscale_screen)
@@ -44,7 +44,7 @@ def preprocess_screen(screen, width=320, height=240, canny=False):
     return grayscale_screen
 
 def save_preprocessed_screen(image, folder, base_filename, timestamp, quality=95):
-    print(f"Saving preprocessed screen with dimensions: {image.shape}")  # Log dimensions
+    # print(f"Saving preprocessed screen with dimensions: {image.shape}")  # Log dimensions
     filepath = os.path.join(folder, f"{base_filename}-{timestamp}.jpg")
     os.makedirs(folder, exist_ok=True)
     if len(image.shape) == 2:  # Image is grayscale

@@ -22,18 +22,18 @@ def read_text_from_area(img, coords):
     except pytesseract.TesseractError as e:
         logging.error(f"Error reading text with Tesseract: {e}")
         text = ""
-    logging.info(f"Text read from area {coords}: {text}")
+    # logging.info(f"Text read from area {coords}: {text}")
     return text.strip()
 
 def parse_number_from_text(text):
     match = re.search(r'\d+', text)
     if match:
         number = int(match.group())
-        logging.info(f"Parsed number from text '{text}': {number}")
+        # logging.info(f"Parsed number from text '{text}': {number}")
         return number
     else:
-        logging.error(f"Could not parse number from text '{text}', returning 0")
-        return 0  # Ensures a number is always returned, preventing TypeError
+        # logging.warning(f"Could not parse number from text '{text}', returning None")
+        return None  # Return None instead of 0 to indicate failure
 
 # This function is just for debugging purposes, to save the cropped areas as images
 def save_debug_images_for_ocr(preprocessed_screen):
