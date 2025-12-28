@@ -1,8 +1,10 @@
 import logging
+import os
 from train_pinball_model import train_model
 
+ROOT = os.path.dirname(os.path.abspath(__file__))
+
 if __name__ == "__main__":
-    # Configure logging to file and console
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s:%(levelname)s:%(message)s',
@@ -12,9 +14,11 @@ if __name__ == "__main__":
         ]
     )
 
-    window_title = "3D Pinball for Windows - Space Cadet"
-    templates_directory = r'C:\Users\marvi\Pinball Wizard\templates'
-    screenshot_dir = r'C:\Users\marvi\Pinball Wizard\Screenshots'
+    templates_directory = os.path.join(ROOT, 'templates')
+    screenshot_dir = os.path.join(ROOT, 'screenshots')
 
-    # Start training, now also passing the screenshot_dir
+    os.makedirs(templates_directory, exist_ok=True)
+    os.makedirs(screenshot_dir, exist_ok=True)
+
+    window_title = "3D Pinball for Windows - Space Cadet"
     train_model(window_title, templates_directory, screenshot_dir)
