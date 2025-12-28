@@ -42,6 +42,7 @@ pandas==2.3.3
 pillow==12.0.0
 protobuf==6.33.2
 PyAutoGUI==0.9.54
+pydirectinput==1.0.4
 PyGetWindow==0.0.9
 Pygments==2.19.2
 PyMsgBox==2.0.1

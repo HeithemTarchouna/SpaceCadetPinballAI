@@ -15,13 +15,22 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 from stable_baselines3 import PPO
-from stable_baselines3.common.vec_env import DummyVecEnv
+from stable_baselines3.common.vec_env import DummyVecEnv, VecTransposeImage
 from tensorboard_callback import TensorboardCallback
 from game_control import GameControl
 
 def create_env(window_title, templates_directory, screenshot_dir):
+    """Create the pinball environment with proper image format for CNN."""
     from pinball_env import PinballEnv
-    return DummyVecEnv([lambda: PinballEnv(window_title, templates_directory, screenshot_dir)])
+    
+    def make_env():
+        return PinballEnv(window_title, templates_directory, screenshot_dir)
+    
+    # Wrap in DummyVecEnv first
+    env = DummyVecEnv([make_env])
+    # VecTransposeImage converts HWC (240, 320, 3) to CHW (3, 240, 320) for CNN
+    env = VecTransposeImage(env)
+    return env
 
 def train_policy(env, policy, total_timesteps=256, tensorboard_log=None):
     n_steps = min(2048, total_timesteps)  # Ensure n_steps is not greater than total_timesteps

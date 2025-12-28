@@ -1,53 +1,103 @@
-# Pinball Wizard
+# Space Cadet Pinball AI
 
-A reinforcement learning project to train an AI to play the classic 3D Pinball game for Windows - Space Cadet using Stable Baselines3 and TensorFlow.
+A reinforcement learning project to train an AI to play the classic 3D Pinball for Windows - Space Cadet using PPO (Proximal Policy Optimization) and a custom CNN architecture.
 
 ## Table of Contents
 
 1. [Project Description](#project-description)
 2. [Installation](#installation)
 3. [Usage](#usage)
-4. [Project Structure](#project-structure)
-5. [Contributing](#contributing)
-6. [License](#license)
-7. [Contact Information](#contact-information)
+4. [Training Tips](#training-tips)
+5. [Project Structure](#project-structure)
+6. [Contributing](#contributing)
+7. [License](#license)
 
 ## Project Description
 
-The Pinball Wizard AI project aims to create an AI agent that can learn to play the 3D Pinball game for Windows - Space Cadet. The project uses reinforcement learning algorithms implemented with Stable Baselines3 and logs training data using TensorBoard for analysis.
+This project trains a deep reinforcement learning agent to play Space Cadet Pinball. The AI learns by:
+- **Observing** the game screen (320x240 RGB images)
+- **Taking actions** (left flipper, right flipper, both, plunger, or none)
+- **Receiving rewards** for scoring points, keeping the ball alive, and using flippers correctly
+
+### Features
+- Custom CNN architecture optimized for pinball visuals
+- Direct game state reading via shared memory (ball position, score)
+- Intelligent reward shaping for faster learning
+- TensorBoard logging for training visualization
+- Automatic game restart on ball loss
 
 ## Installation
 
-To set up this project locally, follow these steps:
-
 1. **Clone the repository:**
    ```sh
-   git clone https://github.com/MarvinWalls/PinballWizard.git
-   cd PinballWizard
+   git clone https://github.com/yourusername/SpaceCadetPinballAI.git
+   cd SpaceCadetPinballAI
    ```
 
 2. **Set up a virtual environment:**
-   ```
+   ```sh
    python -m venv venv
-   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+   venv\Scripts\activate  # Windows
    ```
 
-3. **Install the required dependencies:**
-   ```
+3. **Install dependencies:**
+   ```sh
    pip install -r requirements.txt
    ```
 
+4. **Place the game:** Put the SpaceCadetPinball executable and files in the `game/` folder.
+
 ## Usage
 
-To train the AI agent, run the following command:
+### Quick Start - Train the AI
 
+```sh
+python train.py
 ```
-python main.py
+
+This will:
+1. Launch the pinball game automatically
+2. Start training with 500,000 timesteps
+3. Save the model as `pinball_model.zip`
+
+### Training Options
+
+```sh
+# Train for a specific number of steps
+python train.py 1000000
+
+# Use smaller/faster CNN (good for testing)
+python train.py --small
+
+# Combine options
+python train.py 100000 --small
 ```
 
-### Game Setup
+### Monitor Training with TensorBoard
 
-Ensure you have the 3D Pinball game for Windows - Space Cadet installed on your system. The game window should be visible and not minimized during training.
+```sh
+tensorboard --logdir tensorboard_logs
+```
+
+Then open http://localhost:6006 in your browser.
+
+### Alternative Entry Point
+
+```sh
+python main.py  # Uses default settings
+```
+
+## Training Tips
+
+1. **GPU Recommended**: Training is ~10x faster with CUDA. Install PyTorch with CUDA support.
+
+2. **Let it run**: The AI needs 100k+ steps to start learning, and 500k+ for good performance.
+
+3. **Don't minimize the game**: The AI needs to see the game window to capture frames.
+
+4. **Reward signal**: Watch TensorBoard - score should gradually increase over time.
+
+5. **Saved models**: Training auto-saves to `pinball_model.zip`. Resume by running again.
 
 ### TensorBoard
 

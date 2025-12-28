@@ -19,29 +19,45 @@ def apply_canny_edge_detection(image, sigma=0.33):
     upper = int(min(255, (1.0 + sigma) * v))
     return cv2.Canny(image, lower, upper)
 
-def preprocess_screen(screen, width=320, height=240, canny=False):
+def preprocess_screen(screen, width=320, height=240, canny=False, keep_color=True):
+    """Preprocess screen for neural network input.
+    
+    Args:
+        screen: Input image as numpy array
+        width: Target width
+        height: Target height
+        canny: If True, apply Canny edge detection (returns grayscale)
+        keep_color: If True, return RGB image for CNN input (default for RL)
+    """
     if screen is None:
         raise ValueError("Error: Screen is None")
 
     if not isinstance(screen, np.ndarray):
         raise TypeError("Error converting screen to NumPy array.")
 
-    # print(f"Original screen dimensions: {screen.shape}")
-
-    if screen.ndim != 3 or screen.shape[2] != 3:
+    # Handle different input formats
+    if screen.ndim == 2:
+        # Grayscale input - convert to RGB
+        screen = cv2.cvtColor(screen, cv2.COLOR_GRAY2RGB)
+    elif screen.ndim == 3 and screen.shape[2] == 4:
+        # RGBA input - convert to RGB
+        screen = cv2.cvtColor(screen, cv2.COLOR_RGBA2RGB)
+    elif screen.ndim != 3 or screen.shape[2] != 3:
         raise ValueError(f"Error: Invalid screen shape. Expected (height, width, 3), got {screen.shape}")
 
     resized_screen = resize_image(screen, width, height)
-    # print(f"Resized screen dimensions: {resized_screen.shape}")
-
-    grayscale_screen = convert_to_grayscale(resized_screen)
-    # print(f"Grayscale screen dimensions: {grayscale_screen.shape}")
 
     if canny:
+        grayscale_screen = convert_to_grayscale(resized_screen)
         edge_screen = apply_canny_edge_detection(grayscale_screen)
         return edge_screen
 
-    return grayscale_screen
+    if keep_color:
+        # Return RGB for CNN input (PPO CnnPolicy expects 3 channels)
+        return resized_screen
+    else:
+        # Return grayscale if explicitly requested
+        return convert_to_grayscale(resized_screen)
 
 def save_preprocessed_screen(image, folder, base_filename, timestamp, quality=95):
     # print(f"Saving preprocessed screen with dimensions: {image.shape}")  # Log dimensions
