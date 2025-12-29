@@ -155,7 +155,4 @@ Please ensure your code follows the project's coding standards and includes rele
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Contact Information
 
-For any questions or suggestions, please visit my website for contact information https://marvinwalls.github.io/my-portfolio/
-```
